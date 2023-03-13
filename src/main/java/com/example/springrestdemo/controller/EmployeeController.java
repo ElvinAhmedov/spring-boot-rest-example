@@ -39,6 +39,10 @@ public class EmployeeController {
 
         return ResponseEntity.ok().body(employeeService.getEmployeeByNameAndSurname(name, surname));
     }
+    @GetMapping("/searchs")
+    public ResponseEntity<List<EmployeeResponse>> getEmployeeByName(@RequestParam("name") String name){
+        return ResponseEntity.ok().body(employeeService.getEmployeeByName(name));
+    }
     @PostMapping("/insert")
     @ResponseStatus(HttpStatus.CREATED)
     public void insertEmployee (@Valid @RequestBody EmployeeRequest employeeRequest){

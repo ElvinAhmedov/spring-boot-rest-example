@@ -7,6 +7,10 @@ import com.example.springrestdemo.repository.EmployeeRepository;
 import com.example.springrestdemo.rest.model.request.EmployeeRequest;
 import com.example.springrestdemo.rest.model.response.EmployeeResponse;
 import com.example.springrestdemo.service.EmployeeService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,6 +79,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void deleteEmployee(Long id) {
         Employee employee = getEmployeeById(id);
         employeeRepository.delete(employee);
+    }
+
+    @Override
+    public List<EmployeeResponse> getEmployeeByName(String name) {
+
+        Pageable page = PageRequest.of(0,4, Sort.by("id").descending());
+       List<Employee> employee =  employeeRepository.findByName(name,page);
+       List<EmployeeResponse> employeeResponseList = employee.stream()
+                       .map(list->convertEmployeeToResponse(list)).collect(Collectors.toList());
+       return employeeResponseList;
     }
 
     private Employee convertRequestToEmployee(EmployeeRequest employeeRequest) {
